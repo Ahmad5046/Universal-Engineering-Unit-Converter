@@ -54,7 +54,7 @@
         }
     </style>
     <!-- SEO Meta Tags -->
-    <meta name="description" content="The Universal Engineering Unit Converter for real-time conversion of Length, Mass, Temperature, Pressure, Energy, and specialized Construction units.">
+    <meta name="description" content="The Universal Engineering Unit Converter for real-time conversion of Length, Mass, Temperature, Pressure, Energy, Time, and specialized Construction units.">
 </head>
 <body dir="ltr">
 
@@ -134,6 +134,16 @@
                             <td class="px-6 py-4 whitespace-nowrap"><strong class="table-cat-name">Flow Rate & Torque</strong></td>
                             <td class="px-6 py-4 table-desc-primary">Specialized engineering units.</td>
                             <td class="px-6 py-4 table-desc-notes">Includes flow rates (<strong>cusec</strong>, <strong>gpm</strong>) and rotational force measurements.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap"><strong class="table-cat-name">Time</strong></td>
+                            <td class="px-6 py-4 table-desc-primary">Duration and intervals.</td>
+                            <td class="px-6 py-4 table-desc-notes">Converts between all common units from <strong>milliseconds</strong> to <strong>years</strong>, essential for scheduling and rate calculations.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap"><strong class="table-cat-name">Velocity / Speed</strong></td>
+                            <td class="px-6 py-4 table-desc-primary">Rate of distance traveled over time.</td>
+                            <td class="px-6 py-4 table-desc-notes">Crucial for fluid dynamics and vehicle calculations, including <strong>km/h</strong>, <strong>mph</strong>, and <strong>knots</strong>.</td>
                         </tr>
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap"><strong class="table-cat-name">Temperature</strong></td>
@@ -345,6 +355,28 @@
                     ft_lb_torque: { name: 'Foot-Pound Force', symbol: 'ft·lbf', factor: 1.35582 },
                 }
             },
+            time: { 
+                base: 'second',
+                units: {
+                    second: { name: 'Second', symbol: 's', factor: 1 },
+                    minute: { name: 'Minute', symbol: 'min', factor: 60 },
+                    hour: { name: 'Hour', symbol: 'hr', factor: 3600 },
+                    day: { name: 'Day', symbol: 'day', factor: 86400 },
+                    week: { name: 'Week', symbol: 'week', factor: 604800 },
+                    year: { name: 'Year', symbol: 'yr', factor: 31536000 }, 
+                    millisecond: { name: 'Millisecond', symbol: 'ms', factor: 0.001 },
+                }
+            },
+            velocity: { // <--- NEW VELOCITY CATEGORY ADDED
+                base: 'meter_per_sec',
+                units: {
+                    meter_per_sec: { name: 'Meter per Second', symbol: 'm/s', factor: 1 },
+                    km_per_hr: { name: 'Kilometer per Hour', symbol: 'km/h', factor: 1 / 3.6 }, // 1 km/h = 0.277778 m/s
+                    miles_per_hr: { name: 'Miles per Hour', symbol: 'mph', factor: 0.44704 },
+                    feet_per_sec: { name: 'Feet per Second', symbol: 'ft/s', factor: 0.3048 },
+                    knot: { name: 'Knot (nautical mph)', symbol: 'knot', factor: 0.514444 },
+                }
+            },
             temperature: {
                 base: 'celsius',
                 units: {
@@ -420,6 +452,8 @@
                     ["Pressure", "Force exerted per unit area.", "Covers units like <strong>MPa</strong>, <strong>psi</strong>, <strong>kPa</strong>, and <strong>atm</strong> for fluid mechanics and structural loads."],
                     ["Energy & Power", "Work and rate of energy transfer.", "Includes standard physics units (`Joule`, `Watt`) and thermal units (<strong>BTU</strong>, <strong>Horsepower</strong>)."],
                     ["Flow Rate & Torque", "Specialized engineering units.", "Includes flow rates (<strong>cusec</strong>, <strong>gpm</strong>) and rotational force measurements."],
+                    ["Time", "Duration and intervals.", "Converts between all common units from <strong>milliseconds</strong> to <strong>years</strong>, essential for scheduling and rate calculations."],
+                    ["Velocity / Speed", "Rate of distance traveled over time.", "Crucial for fluid dynamics and vehicle calculations, including <strong>km/h</strong>, <strong>mph</strong>, and <strong>knots</strong>."],
                     ["Temperature", "Measures of heat and cold.", "Non-linear conversions between <strong>Kelvin</strong>, <strong>Celsius</strong>, and <strong>Fahrenheit</strong>."],
                 ],
                 ur: [
@@ -432,6 +466,8 @@
                     ["دباؤ", "فی یونٹ رقبہ لگائی جانے والی طاقت۔", "فلوئڈ میکینکس اور ساختی بوجھ کے لیے <strong>MPa</strong>، <strong>psi</strong>، <strong>kPa</strong>، اور <strong>atm</strong> جیسے یونٹس کا احاطہ کرتا ہے۔"],
                     ["توانائی اور طاقت", "کام اور توانائی کی منتقلی کی شرح۔", "معیاری طبیعیات یونٹس (`Joule`, `Watt`) اور تھرمل یونٹس (<strong>BTU</strong>، <strong>Horsepower</strong>) شامل ہیں۔"],
                     ["بہاؤ کی شرح اور ٹارک", "خصوصی انجینئرنگ یونٹس۔", "بہاؤ کی شرح (<strong>cusec</strong>، <strong>gpm</strong>) اور گردشی طاقت کی پیمائش شامل ہے۔"],
+                    ["وقت", "دورانیہ اور وقفے۔", "<strong>milliseconds</strong> سے <strong>years</strong> تک کے تمام عام یونٹوں کے درمیان تبدیل کرتا ہے، جو شیڈولنگ اور شرح کے حساب کتاب کے لیے ضروری ہے۔"],
+                    ["رفتار / رفتار", "وقت کے ساتھ طے شدہ فاصلے کی شرح۔", "فلوئڈ ڈائنامکس اور گاڑیوں کے حساب کتاب کے لیے اہم ہے، بشمول <strong>km/h</strong>، <strong>mph</strong>، اور <strong>knots</strong>۔"],
                     ["درجہ حرارت", "حرارت اور سردی کی پیمائش۔", "<strong>Kelvin</strong>، <strong>Celsius</strong>، اور <strong>Fahrenheit</strong> کے درمیان نان لینیئر تبادلے۔"],
                 ],
                 ru: [
@@ -444,6 +480,8 @@
                     ["Давление", "Сила, оказываемая на единицу площади.", "Охватывает такие единицы, как <strong>MPa</strong>, <strong>psi</strong>, <strong>kPa</strong> и <strong>atm</strong> для гидромеханики и структурных нагрузок."],
                     ["Энергия и Мощность", "Работа и скорость передачи энергии.", "Включает стандартные физические единицы (`Joule`, `Watt`) и тепловые единицы (<strong>BTU</strong>, <strong>Horsepower</strong>)."],
                     ["Flow Rate & Torque", "Специализированные инженерные единицы.", "Включает показатели расхода (<strong>cusec</strong>, <strong>gpm</strong>) и измерения вращательной силы."],
+                    ["Время", "Продолжительность и интервалы.", "Конвертирует между всеми общими единицами от <strong>milliseconds</strong> до <strong>years</strong>, что важно для планирования и расчетов скорости."],
+                    ["Скорость / Скорость", "Скорость пройденного расстояния за время.", "Имеет решающее значение для гидродинамики и расчетов транспортных средств, включая <strong>km/h</strong>, <strong>mph</strong> и <strong>knots</strong>."],
                     ["Температура", "Меры тепла и холода.", "Нелинейные преобразования между <strong>Kelvin</strong>, <strong>Celsius</strong> и <strong>Fahrenheit</strong>."],
                 ],
             }
