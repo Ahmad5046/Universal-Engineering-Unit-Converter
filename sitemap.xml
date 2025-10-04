@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset xmlns="[suspicious link removed]">
+<!-- Base URL for the Converter Tool -->
+<url>
+<loc>https://www.google.com/search?q=https://ahmad5046.github.io/Universal-Engineering-Unit-Converter/index.html</loc>
+<lastmod>2025-10-05</lastmod>
+<changefreq>weekly</changefreq>
+<priority>1.0</priority>
+</url>
+
+<!-- Compliance Page 1: Privacy Policy -->
+
+<url>
+<loc>https://www.google.com/search?q=https://ahmad5046.github.io/Universal-Engineering-Unit-Converter/privacy.html</loc>
+<lastmod>2025-10-05</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.8</priority>
+</url>
+
+<!-- Compliance Page 2: Terms of Use -->
+
+<url>
+<loc>https://www.google.com/search?q=https://ahmad5046.github.io/Universal-Engineering-Unit-Converter/terms.html</loc>
+<lastmod>2025-10-05</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.8</priority>
+</url>
+</urlset>
