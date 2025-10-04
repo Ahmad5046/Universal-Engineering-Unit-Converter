@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Engineering Unit Converter - Real-time Calculations</title>
+    
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for better readability and accessibility */
+        :root {
+            --primary-color: #1e40af; /* Tailwind blue-700 */
+            --secondary-color: #f3f4f6; /* Tailwind gray-100 */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--secondary-color);
+            color: #1f2937;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        .input-group label {
+            font-weight: 600;
+            color: #4b5563;
+        }
+        .result-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            min-height: 2.5rem; /* Ensure stability */
+        }
+        .result-unit {
+            font-size: 1.5rem;
+            color: #6b7280;
+        }
+        .swap-icon {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .swap-icon:hover {
+            transform: scale(1.1);
+        }
+        /* Style the language select for a cleaner look */
+        #language-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+    </style>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="The Universal Engineering Unit Converter for real-time conversion of Length, Mass, Temperature, Pressure, Energy, and specialized Construction units.">
+</head>
+<body dir="ltr">
+
+    <div class="container">
+        <!-- Header & Language Selector -->
+        <header class="flex justify-between items-start mb-8 border-b-2 border-gray-200 pb-4">
+            <h1 class="text-3xl font-extrabold text-gray-800" id="main-header">Universal Unit Converter</h1>
+            <div class="flex items-center space-x-4">
+                <label for="language-select" class="text-sm font-medium text-gray-700" id="label-language">Language:</label>
+                <select id="language-select" class="pl-3 pr-10 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-base appearance-none" onchange="changeLanguage()">
+                    <option value="en">English</option>
+                    <option value="ur">Urdu (اردو)</option>
+                    <option value="ru">Russian (Русский)</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- AD SLOT 1: TOP LEADERBOARD -->
+        <div class="ad-slot bg-yellow-100 border border-yellow-300 p-3 text-center text-sm font-semibold text-yellow-800 rounded-lg mb-6 shadow-md">
+            [ AD SLOT 1: TOP LEADERBOARD Placeholder - Replace with your AdSense code ]
+        </div>
+
+        <!-- Category Explanation Table -->
+        <section class="mb-8 p-6 bg-white rounded-xl shadow-lg">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4" id="table-header">Conversion Categories Explained</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider table-col-category">Category</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider table-col-primary">Primary Conversion Types</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider table-col-notes">Relevance & Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200 text-sm">
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap"><strong class="table-cat-name">Length</strong></td>
+                            <td class="px-6 py-4 table-desc-primary">Distance, dimensions, heights.</td>
+                            <td class="px-6 py-4 table-desc-notes">Includes standard units (`meter`, `foot`, `inch`) and the construction-specific <strong>sooter</strong>.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap"><strong class="table-cat-name">Area</strong></td>
+                            <td class="px-6 py-4 table-desc-primary">Surface area and land measurement.</td>
+                            <td class="px-6 py-4 table-desc-notes">Converts standard square units (`ft²`, `m²`) as well as <strong>acre</strong> and <strong>hectare</strong>.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap"><strong class="table-cat-name">Volume</strong></td>
+                            <td class="px-6 py-4 table-desc-primary">Material quantities and liquid capacity.</td>
+                            <td class="px-6 py-4 table-desc-notes">Essential cubic measurements (`m³`, `ft³`, `yd³`) for concrete, brickwork, and excavation, along with <strong>gallons</strong> and <strong>liters</strong>.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap"><strong class="table-cat-name">Mass</strong></td>
+                            <td class="px-6 py-4 table-desc-primary">Weight of objects or materials.</td>
+                            <td class="px-6 py-4 table-desc-notes">Standard mass units (`kg`, `lb`, <strong>tonne</strong>) plus <strong>British Ton</strong> and <strong>Hundredweight (Cwt)</strong>.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap"><strong class="table-cat-name">Density / Unit Weight</strong></td>
+                            <td class="px-6 py-4 table-desc-primary">Mass or weight per unit volume.</td>
+                            <td class="px-6 py-4 table-desc-notes">Critical for material calculations, including <strong>kN/m³</strong> and <strong>lb/ft³</strong>.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap"><strong class="table-cat-name">Force / Weight</strong></td>
+                            <td class="px-6 py-4 table-desc-primary">Applied loads and gravitational force.</td>
+                            <td class="px-6 py-4 table-desc-notes">Converts force units (<strong>Newton</strong>, <strong>KiloNewton</strong>) and high loads (<strong>Kip</strong>, <strong>kgf</strong>).</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap"><strong class="table-cat-name">Pressure</strong></td>
+                            <td class="px-6 py-4 table-desc-primary">Force exerted per unit area.</td>
+                            <td class="px-6 py-4 table-desc-notes">Covers units like <strong>MPa</strong>, <strong>psi</strong>, <strong>kPa</strong>, and <strong>atm</strong> for fluid mechanics and structural loads.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap"><strong class="table-cat-name">Energy & Power</strong></td>
+                            <td class="px-6 py-4 table-desc-primary">Work and rate of energy transfer.</td>
+                            <td class="px-6 py-4 table-desc-notes">Includes standard physics units (`Joule`, `Watt`) and thermal units (<strong>BTU</strong>, <strong>Horsepower</strong>).</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap"><strong class="table-cat-name">Flow Rate & Torque</strong></td>
+                            <td class="px-6 py-4 table-desc-primary">Specialized engineering units.</td>
+                            <td class="px-6 py-4 table-desc-notes">Includes flow rates (<strong>cusec</strong>, <strong>gpm</strong>) and rotational force measurements.</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap"><strong class="table-cat-name">Temperature</strong></td>
+                            <td class="px-6 py-4 table-desc-primary">Measures of heat and cold.</td>
+                            <td class="px-6 py-4 table-desc-notes">Non-linear conversions between <strong>Kelvin</strong>, <strong>Celsius</strong>, and <strong>Fahrenheit</strong>.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- AD SLOT 2: MEDIUM RECTANGLE / NATIVE SLOT -->
+        <div class="ad-slot bg-indigo-100 border border-indigo-300 p-4 text-center text-sm font-semibold text-indigo-800 rounded-lg mb-8 shadow-md">
+            [ AD SLOT 2: MEDIUM RECTANGLE / NATIVE SLOT Placeholder - Replace with your AdSense code ]
+        </div>
+
+        <!-- Main Conversion Tool -->
+        <section class="p-8 bg-white rounded-xl shadow-2xl">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-2" id="tool-header">Unit Conversion Tool</h2>
+
+            <!-- Category Selector -->
+            <div class="input-group mb-8">
+                <label for="category-select" class="block text-lg mb-2" id="label-category">Select Conversion Category:</label>
+                <select id="category-select" class="w-full p-3 border border-gray-300 rounded-lg text-lg focus:ring-primary-color focus:border-primary-color" aria-label="Select Conversion Category"></select>
+            </div>
+
+            <div class="flex flex-col lg:flex-row items-center lg:space-x-6 space-y-6 lg:space-y-0">
+                
+                <!-- Input Card -->
+                <div class="w-full lg:w-5/12 p-6 bg-gray-50 rounded-lg border-2 border-gray-200 shadow-md space-y-4">
+                    <div class="input-group">
+                        <label for="from-unit" class="block mb-2" id="label-from-unit">Source Unit:</label>
+                        <select id="from-unit" class="w-full p-3 border border-gray-300 rounded-lg text-base focus:ring-primary-color focus:border-primary-color" aria-label="Select source unit"></select>
+                    </div>
+                    <div class="input-group">
+                        <label for="input-value" class="block mb-2" id="label-input-value">Input Value (From):</label>
+                        <input type="number" id="input-value" value="1.0" min="0" step="any" class="w-full p-3 border border-gray-300 rounded-lg text-xl focus:ring-primary-color focus:border-primary-color" aria-label="Input value to convert">
+                    </div>
+                </div>
+
+                <!-- Swap Icon -->
+                <div class="lg:w-1/12 flex justify-center">
+                    <div class="swap-icon p-3 text-4xl text-primary-color hover:text-blue-900 transition duration-150" onclick="swapUnits()" role="button" aria-label="Swap source and target units">
+                        🔄
+                    </div>
+                </div>
+
+                <!-- Result Card -->
+                <div class="w-full lg:w-5/12 p-6 bg-green-50 rounded-lg border-2 border-green-300 shadow-md space-y-4">
+                    <div class="input-group">
+                        <label for="to-unit" class="block mb-2" id="label-to-unit">Target Unit:</label>
+                        <select id="to-unit" class="w-full p-3 border border-gray-300 rounded-lg text-base focus:ring-primary-color focus:border-primary-color" aria-label="Select target unit"></select>
+                    </div>
+                    <div class="input-group">
+                        <label class="block mb-2 text-xl font-bold" id="label-converted-value">Converted Value (To):</label>
+                        <div class="p-3 bg-white rounded-lg border border-gray-200">
+                            <span id="result-value" class="result-value">0.00</span>
+                            <span id="result-unit" class="result-unit"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conversion History Download -->
+            <div class="mt-8 flex justify-center">
+                <button onclick="downloadHistory()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-150" id="btn-download-history">
+                    Download Conversion History (CSV)
+                </button>
+            </div>
+        </section>
+
+        <!-- AD SLOT 3: BOTTOM BANNER -->
+        <div class="ad-slot bg-yellow-100 border border-yellow-300 p-3 text-center text-sm font-semibold text-yellow-800 rounded-lg mt-8 shadow-md">
+            [ AD SLOT 3: BOTTOM BANNER Placeholder - Replace with your AdSense code ]
+        </div>
+    </div>
+
+    <!-- Footer for Compliance Links -->
+    <footer class="bg-gray-800 text-white text-center p-6 mt-10">
+        <p class="mb-2">&copy; 2025 Universal Engineering Unit Converter. All rights reserved.</p>
+        <div class="space-x-4">
+            <a href="privacy.html" class="text-gray-400 hover:text-white transition duration-150">Privacy Policy</a>
+            <span class="text-gray-600">|</span>
+            <a href="terms.html" class="text-gray-400 hover:text-white transition duration-150">Terms of Use</a>
+        </div>
+    </footer>
+
+    <!-- JavaScript: Unit Data, Conversion Logic, and History/Language -->
+    <script>
+        // --- 1. UNIT DEFINITIONS AND CONVERSION FACTORS ---
+        // Factors are defined relative to the 'base' unit (factor = 1).
+        const UNITS = {
+            length: {
+                base: 'meter',
+                units: {
+                    meter: { name: 'Meter', symbol: 'm', factor: 1 },
+                    kilometer: { name: 'Kilometer', symbol: 'km', factor: 1000 },
+                    centimeter: { name: 'Centimeter', symbol: 'cm', factor: 0.01 },
+                    millimeter: { name: 'Millimeter', symbol: 'mm', factor: 0.001 },
+                    foot: { name: 'Foot', symbol: 'ft', factor: 0.3048 },
+                    inch: { name: 'Inch', symbol: 'in', factor: 0.0254 },
+                    sooter: { name: 'Sooter (1/8 inch)', symbol: 'soot', factor: 0.003175 }, // 0.125 in * 0.0254 m/in
+                    mile: { name: 'Mile', symbol: 'mi', factor: 1609.34 },
+                    yard: { name: 'Yard', symbol: 'yd', factor: 0.9144 },
+                    nautical_mile: { name: 'Nautical Mile', symbol: 'nm', factor: 1853 },
+                    running_feet: { name: 'Running Feet (rft)', symbol: 'rft', factor: 0.3048 },
+                    running_meter: { name: 'Running Meter (rm)', symbol: 'rm', factor: 1 },
+                }
+            },
+            area: {
+                base: 'sq_meter',
+                units: {
+                    sq_meter: { name: 'Square Meter', symbol: 'm²', factor: 1 },
+                    sq_ft: { name: 'Square Foot', symbol: 'ft²', factor: 0.0929 }, // Based on 0.0929 m²
+                    sq_cm: { name: 'Square Centimeter', symbol: 'cm²', factor: 0.0001 },
+                    sq_inch: { name: 'Square Inch', symbol: 'in²', factor: 0.00064516 },
+                    sq_yard: { name: 'Square Yard', symbol: 'yd²', factor: 0.8361 },
+                    sq_mile: { name: 'Square Mile', symbol: 'mi²', factor: 2589988.11 }, // 2.59 km² * 10^6 m²/km²
+                    sq_km: { name: 'Square Kilometer', symbol: 'km²', factor: 1000000 },
+                    acre: { name: 'Acre', symbol: 'ac', factor: 4046.9 },
+                    hectare: { name: 'Hectare', symbol: 'ha', factor: 10000 },
+                    kanal: { name: 'Kanal', symbol: 'kanal', factor: 505.857 }, // 8 kanal per acre / 8 = 505.857
+                }
+            },
+            volume: {
+                base: 'cubic_meter',
+                units: {
+                    cubic_meter: { name: 'Cubic Meter (cum)', symbol: 'm³', factor: 1 },
+                    cu_ft: { name: 'Cubic Foot (cft)', symbol: 'ft³', factor: 0.0283 }, // Based on 0.0283 m³
+                    cu_yd: { name: 'Cubic Yard', symbol: 'yd³', factor: 0.7646 },
+                    cu_inch: { name: 'Cubic Inch', symbol: 'in³', factor: 0.00001639 },
+                    us_gal: { name: 'US Gallon', symbol: 'US gal', factor: 0.003785 },
+                    british_gal: { name: 'British Gallon', symbol: 'UK gal', factor: 0.004546 },
+                    liter: { name: 'Litre', symbol: 'L', factor: 0.001 },
+                    acre_ft: { name: 'Acre Foot', symbol: 'ac-ft', factor: 1233.48 },
+                }
+            },
+            mass: {
+                base: 'kilogram',
+                units: {
+                    kilogram: { name: 'Kilogram', symbol: 'kg', factor: 1 },
+                    gram: { name: 'Gram', symbol: 'g', factor: 0.001 },
+                    milligram: { name: 'Milligram', symbol: 'mg', factor: 0.000001 },
+                    pound: { name: 'Pound (lb)', symbol: 'lb', factor: 0.4536 },
+                    ounce: { name: 'Ounce', symbol: 'oz', factor: 0.0283495 },
+                    metric_ton: { name: 'Metric Tonne (M Ton)', symbol: 'Tonne', factor: 1000 },
+                    ton_british: { name: 'British Ton (T)', symbol: 'T (UK)', factor: 1016.0 },
+                    cwt: { name: 'Hundredweight', symbol: 'Cwt', factor: 50.80 },
+                }
+            },
+            density: {
+                base: 'kg_per_m3', // Kilograms per Cubic Meter
+                units: {
+                    kg_per_m3: { name: 'kg/m³', symbol: 'kg/m³', factor: 1 },
+                    kN_per_m3: { name: 'kN/m³', symbol: 'kN/m³', factor: 101.9716 }, // 1000 / 9.807 = 101.9716 approx
+                    lb_per_ft3: { name: 'lb/ft³', symbol: 'lb/ft³', factor: 16.0185 }, // 1 lb/ft³ in kg/m³
+                    m_ton_per_m3: { name: 'M Ton/m³', symbol: 'M Ton/m³', factor: 1000 },
+                }
+            },
+            force: {
+                base: 'newton',
+                units: {
+                    newton: { name: 'Newton', symbol: 'N', factor: 1 },
+                    kilonewton: { name: 'KiloNewton', symbol: 'kN', factor: 1000 },
+                    pound_force: { name: 'Pound Force (lbf)', symbol: 'lbf', factor: 4.448 },
+                    kilopound: { name: 'Kilopound (kip)', symbol: 'kip', factor: 4448 }, // 1 kip = 1000 lbf
+                    kilogram_force: { name: 'Kilogram Force (kgf)', symbol: 'kgf', factor: 9.807 },
+                }
+            },
+            pressure: {
+                base: 'pascal',
+                units: {
+                    pascal: { name: 'Pascal', symbol: 'Pa', factor: 1 },
+                    kpa: { name: 'KiloPascal (K Pa)', symbol: 'K Pa', factor: 1000 },
+                    mpa: { name: 'MegaPascal', symbol: 'MPa', factor: 1000000 },
+                    psi: { name: 'Pound per Sq Inch (psi)', symbol: 'psi', factor: 6894.76 }, // Based on 6894.76 Pa
+                    psf: { name: 'Pound per Sq Foot (psf)', symbol: 'psf', factor: 47.88026 }, // 1 psf = 1/144 psi in Pa. 144 psi = 1 MPa (approx 145 psi)
+                    atmosphere: { name: 'Standard Atmosphere', symbol: 'atm', factor: 101325 },
+                    bar: { name: 'Bar', symbol: 'bar', factor: 100000 },
+                    kg_per_cm2: { name: 'kg/cm²', symbol: 'kg/cm²', factor: 98066.5 },
+                }
+            },
+            energy: {
+                base: 'joule',
+                units: {
+                    joule: { name: 'Joule', symbol: 'J', factor: 1 },
+                    kwh: { name: 'Kilowatt-hour', symbol: 'kWh', factor: 3600000 },
+                    watt_hr: { name: 'Watt-hour', symbol: 'Wh', factor: 3600 },
+                    ft_lb: { name: 'Foot-Pound', symbol: 'ft lb', factor: 1.35582 }, // 1 J = 0.7373 ft lb, so 1 ft lb = 1/0.7373 J
+                    btu: { name: 'British Thermal Unit', symbol: 'BTU', factor: 1055.06 },
+                    ton_tnt: { name: 'Ton TNT', symbol: 'Ton TNT', factor: 4.184e9 },
+                }
+            },
+            power: {
+                base: 'watt',
+                units: {
+                    watt: { name: 'Watt', symbol: 'W', factor: 1 },
+                    kilowatt: { name: 'Kilowatt', symbol: 'kW', factor: 1000 },
+                    metric_hp: { name: 'Metric Horsepower (hp)', symbol: 'hp (m)', factor: 735.499 },
+                    electric_hp: { name: 'Electric Horsepower', symbol: 'hp (e)', factor: 746 }, // Rounded from 745.7
+                    ft_lb_per_min: { name: 'ft lb/min', symbol: 'ft lb/min', factor: 0.02259697 }, // 1W = 44.25 ft lb/min
+                }
+            },
+            flow_rate: {
+                base: 'cubic_meter_per_sec',
+                units: {
+                    cubic_meter_per_sec: { name: 'm³/s', symbol: 'm³/s', factor: 1 },
+                    cusec: { name: 'Cusec (ft³/s)', symbol: 'cusec', factor: 0.0283168 },
+                    gpm: { name: 'Gallons per Minute (US)', symbol: 'gpm', factor: 0.0000630902 },
+                }
+            },
+            torque: {
+                base: 'newton_meter',
+                units: {
+                    newton_meter: { name: 'Newton Meter', symbol: 'Nm', factor: 1 },
+                    ft_lb_torque: { name: 'Foot-Pound Force', symbol: 'ft·lbf', factor: 1.35582 },
+                }
+            },
+            temperature: {
+                base: 'celsius',
+                units: {
+                    celsius: { name: 'Celsius', symbol: '°C', factor: 1 },
+                    fahrenheit: { name: 'Fahrenheit', symbol: '°F', factor: 1 },
+                    kelvin: { name: 'Kelvin', symbol: 'K', factor: 1 },
+                },
+                convert: (value, fromUnit, toUnit) => {
+                    let K;
+                    // Convert to Kelvin
+                    if (fromUnit === 'celsius') K = value + 273.15;
+                    else if (fromUnit === 'fahrenheit') K = (value - 32) * (5 / 9) + 273.15;
+                    else if (fromUnit === 'kelvin') K = value;
+                    else return NaN;
+
+                    // Convert from Kelvin to target
+                    if (toUnit === 'celsius') return K - 273.15;
+                    else if (toUnit === 'fahrenheit') return (K - 273.15) * (9 / 5) + 32;
+                    else if (toUnit === 'kelvin') return K;
+                    else return NaN;
+                }
+            },
+        };
+
+        // --- 2. TRANSLATION MAP ---
+        const TRANSLATIONS = {
+            en: {
+                direction: 'ltr',
+                'main-header': 'Universal Unit Converter',
+                'label-language': 'Language:',
+                'table-header': 'Conversion Categories Explained',
+                'tool-header': 'Unit Conversion Tool',
+                'label-category': 'Select Conversion Category:',
+                'label-from-unit': 'Source Unit:',
+                'label-input-value': 'Input Value (From):',
+                'label-to-unit': 'Target Unit:',
+                'label-converted-value': 'Converted Value (To):',
+                'btn-download-history': 'Download Conversion History (CSV)',
+            },
+            ur: {
+                direction: 'rtl',
+                'main-header': 'یونیورسل یونٹ کنورٹر',
+                'label-language': 'زبان:',
+                'table-header': 'تبادلوں کی اقسام کی وضاحت',
+                'tool-header': 'یونٹ کنورژن ٹول',
+                'label-category': 'تبدیلی کی قسم منتخب کریں:',
+                'label-from-unit': 'ابتدائی یونٹ:',
+                'label-input-value': 'ابتدائی قدر (From):',
+                'label-to-unit': 'منزل کا یونٹ:',
+                'label-converted-value': 'تبدیل شدہ قدر (To):',
+                'btn-download-history': 'تبادلہ ہسٹری ڈاؤن لوڈ کریں (CSV)',
+            },
+            ru: {
+                direction: 'ltr',
+                'main-header': 'Универсальный Конвертер Единиц',
+                'label-language': 'Язык:',
+                'table-header': 'Объяснение Категорий Конвертации',
+                'tool-header': 'Инструмент Конвертации Единиц',
+                'label-category': 'Выберите Категорию Конвертации:',
+                'label-from-unit': 'Исходная Единица:',
+                'label-input-value': 'Входное Значение (Из):',
+                'label-to-unit': 'Целевая Единица:',
+                'label-converted-value': 'Конвертированное Значение (В):',
+                'btn-download-history': 'Скачать Историю Конвертации (CSV)',
+            },
+
+            // Translations for the static content in the explanation table (using innerHTML for <strong> tags)
+            tableContent: {
+                en: [
+                    ["Length", "Distance, dimensions, heights.", "Includes standard units (`meter`, `foot`, `inch`) and the construction-specific <strong>sooter</strong>."],
+                    ["Area", "Surface area and land measurement.", "Converts standard square units (`ft²`, `m²`) as well as <strong>acre</strong> and <strong>hectare</strong>."],
+                    ["Volume", "Material quantities and liquid capacity.", "Essential cubic measurements (`m³`, `ft³`, `yd³`) for concrete, brickwork, and excavation, along with <strong>gallons</strong> and <strong>liters</strong>."],
+                    ["Mass", "Weight of objects or materials.", "Standard mass units (`kg`, `lb`, <strong>tonne</strong>) plus <strong>British Ton</strong> and <strong>Hundredweight (Cwt)</strong>."],
+                    ["Density / Unit Weight", "Mass or weight per unit volume.", "Critical for material calculations, including <strong>kN/m³</strong> and <strong>lb/ft³</strong>."],
+                    ["Force / Weight", "Applied loads and gravitational force.", "Converts force units (<strong>Newton</strong>, <strong>KiloNewton</strong>) and high loads (<strong>Kip</strong>, <strong>kgf</strong>)."],
+                    ["Pressure", "Force exerted per unit area.", "Covers units like <strong>MPa</strong>, <strong>psi</strong>, <strong>kPa</strong>, and <strong>atm</strong> for fluid mechanics and structural loads."],
+                    ["Energy & Power", "Work and rate of energy transfer.", "Includes standard physics units (`Joule`, `Watt`) and thermal units (<strong>BTU</strong>, <strong>Horsepower</strong>)."],
+                    ["Flow Rate & Torque", "Specialized engineering units.", "Includes flow rates (<strong>cusec</strong>, <strong>gpm</strong>) and rotational force measurements."],
+                    ["Temperature", "Measures of heat and cold.", "Non-linear conversions between <strong>Kelvin</strong>, <strong>Celsius</strong>, and <strong>Fahrenheit</strong>."],
+                ],
+                ur: [
+                    ["لمبائی", "فاصلہ، طول و عرض، اونچائیاں۔", "معیاری یونٹس (`meter`, `foot`, `inch`) اور تعمیراتی یونٹ <strong>sooter</strong> شامل ہیں۔"],
+                    ["رقبہ", "سطح کا رقبہ اور زمین کی پیمائش۔", "معیاری مربع یونٹس (`ft²`, `m²`) کے ساتھ ساتھ <strong>acre</strong> اور <strong>hectare</strong> کو بھی تبدیل کرتا ہے۔"],
+                    ["حجم", "مادی مقدار اور مائع کی گنجائش۔", "کنکریٹ، اینٹوں کے کام اور کھدائی کے لیے ضروری کیوبک پیمائش (`m³`, `ft³`, `yd³`) کے ساتھ ساتھ <strong>gallons</strong> اور <strong>liters</strong> بھی شامل ہیں۔"],
+                    ["وزن", "اشیاء یا مواد کا وزن۔", "معیاری ماس یونٹس (`kg`, `lb`, <strong>tonne</strong>) کے علاوہ <strong>British Ton</strong> اور <strong>Hundredweight (Cwt)</strong>۔"],
+                    ["کثافت / یونٹ وزن", "فی یونٹ حجم وزن یا ماس۔", "مادی حساب کے لیے ضروری ہے، بشمول <strong>kN/m³</strong> اور <strong>lb/ft³</strong>۔"],
+                    ["طاقت / بوجھ", "لگائے گئے بوجھ اور کشش ثقل کی طاقت۔", "طاقت کے یونٹس (<strong>Newton</strong>، <strong>KiloNewton</strong>) اور زیادہ بوجھ (<strong>Kip</strong>، <strong>kgf</strong>) کو تبدیل کرتا ہے۔"],
+                    ["دباؤ", "فی یونٹ رقبہ لگائی جانے والی طاقت۔", "فلوئڈ میکینکس اور ساختی بوجھ کے لیے <strong>MPa</strong>، <strong>psi</strong>، <strong>kPa</strong>، اور <strong>atm</strong> جیسے یونٹس کا احاطہ کرتا ہے۔"],
+                    ["توانائی اور طاقت", "کام اور توانائی کی منتقلی کی شرح۔", "معیاری طبیعیات یونٹس (`Joule`, `Watt`) اور تھرمل یونٹس (<strong>BTU</strong>، <strong>Horsepower</strong>) شامل ہیں۔"],
+                    ["بہاؤ کی شرح اور ٹارک", "خصوصی انجینئرنگ یونٹس۔", "بہاؤ کی شرح (<strong>cusec</strong>، <strong>gpm</strong>) اور گردشی طاقت کی پیمائش شامل ہے۔"],
+                    ["درجہ حرارت", "حرارت اور سردی کی پیمائش۔", "<strong>Kelvin</strong>، <strong>Celsius</strong>، اور <strong>Fahrenheit</strong> کے درمیان نان لینیئر تبادلے۔"],
+                ],
+                ru: [
+                    ["Длина", "Расстояние, размеры, высоты.", "Включает стандартные единицы (`meter`, `foot`, `inch`) и специфическую для строительства <strong>sooter</strong>."],
+                    ["Площадь", "Площадь поверхности и измерения земли.", "Конвертирует стандартные квадратные единицы (`ft²`, `m²`), а также <strong>acre</strong> и <strong>hectare</strong>."],
+                    ["Объем", "Количество материала и вместимость жидкости.", "Основные кубические измерения (`m³`, `ft³`, `yd³`) для бетона, кирпичной кладки и земляных работ, а также <strong>gallons</strong> и <strong>liters</strong>."],
+                    ["Масса", "Вес объектов или материалов.", "Стандартные единицы массы (`kg`, `lb`, <strong>tonne</strong>) плюс <strong>British Ton</strong> и <strong>Hundredweight (Cwt)</strong>."],
+                    ["Плотность / Удельный Вес", "Масса или вес на единицу объема.", "Критически важен для расчетов материалов, включая <strong>kN/m³</strong> и <strong>lb/ft³</strong>."],
+                    ["Сила / Вес", "Приложенные нагрузки и гравитационная сила.", "Конвертирует единицы силы (<strong>Newton</strong>, <strong>KiloNewton</strong>) и большие нагрузки (<strong>Kip</strong>, <strong>kgf</strong>)."],
+                    ["Давление", "Сила, оказываемая на единицу площади.", "Охватывает такие единицы, как <strong>MPa</strong>, <strong>psi</strong>, <strong>kPa</strong> и <strong>atm</strong> для гидромеханики и структурных нагрузок."],
+                    ["Энергия и Мощность", "Работа и скорость передачи энергии.", "Включает стандартные физические единицы (`Joule`, `Watt`) и тепловые единицы (<strong>BTU</strong>, <strong>Horsepower</strong>)."],
+                    ["Расход и Крутящий Момент", "Специализированные инженерные единицы.", "Включает показатели расхода (<strong>cusec</strong>, <strong>gpm</strong>) и измерения вращательной силы."],
+                    ["Температура", "Меры тепла и холода.", "Нелинейные преобразования между <strong>Kelvin</strong>, <strong>Celsius</strong> и <strong>Fahrenheit</strong>."],
+                ],
+            }
+        };
+
+        let conversionHistory = [];
+
+        // --- 3. CORE CONVERSION LOGIC ---
+        function convertStandard(value, category, fromUnit, toUnit) {
+            const categoryData = UNITS[category];
+            if (!categoryData) return NaN;
+
+            const fromFactor = categoryData.units[fromUnit]?.factor;
+            const toFactor = categoryData.units[toUnit]?.factor;
+
+            if (!fromFactor || !toFactor) return NaN;
+
+            // FIX: Corrected the division from 'toUnit' (string) to 'toFactor' (number)
+            return value * (fromFactor / toFactor);
+        }
+
+        function convertUnit(value, category, fromUnit, toUnit) {
+            if (category === 'temperature') {
+                return UNITS.temperature.convert(value, fromUnit, toUnit);
+            } else {
+                return convertStandard(value, category, fromUnit, toUnit);
+            }
+        }
+
+        function performConversion() {
+            const category = document.getElementById('category-select').value;
+            const fromUnit = document.getElementById('from-unit').value;
+            const toUnit = document.getElementById('to-unit').value;
+            const inputField = document.getElementById('input-value');
+            const resultField = document.getElementById('result-value');
+            const resultUnitSpan = document.getElementById('result-unit');
+            const inputValue = parseFloat(inputField.value);
+
+            // 1. Validation
+            if (isNaN(inputValue)) {
+                resultField.textContent = '0.00';
+                resultUnitSpan.textContent = '';
+                return;
+            }
+
+            // 2. Conversion
+            const convertedValue = convertUnit(inputValue, category, fromUnit, toUnit);
+
+            // 3. Display Result
+            if (!isNaN(convertedValue)) {
+                const targetUnitSymbol = UNITS[category].units[toUnit].symbol;
+                // Use toLocaleString for better formatting, with max 6 decimal places for precision
+                resultField.textContent = convertedValue.toFixed(6).toLocaleString('en-US', {maximumFractionDigits: 6}); 
+                resultUnitSpan.textContent = targetUnitSymbol;
+
+                // 4. Log History
+                conversionHistory.push({
+                    timestamp: new Date().toISOString(),
+                    category: category,
+                    input: inputValue,
+                    fromUnit: UNITS[category].units[fromUnit].symbol,
+                    toUnit: targetUnitSymbol,
+                    result: convertedValue.toFixed(6)
+                });
+            } else {
+                resultField.textContent = 'Error';
+                resultUnitSpan.textContent = '';
+                console.error("Conversion failed. Check unit factors or temperature logic.");
+            }
+        }
+
+        // --- 4. DOM MANIPULATION & SETUP ---
+        function populateUnits(category, selectElement) {
+            selectElement.innerHTML = '';
+            const unitData = UNITS[category].units;
+            Object.keys(unitData).forEach(unitKey => {
+                const unit = unitData[unitKey];
+                const option = new Option(`${unit.name} (${unit.symbol})`, unitKey);
+                selectElement.add(option);
+            });
+            if (selectElement.options.length > 0) {
+                selectElement.selectedIndex = 0;
+            }
+        }
+
+        function populateCategories() {
+            const categorySelect = document.getElementById('category-select');
+            categorySelect.innerHTML = '';
+            Object.keys(UNITS).forEach(category => {
+                // Format category name (e.g., 'flow_rate' -> 'Flow Rate')
+                const formattedName = category.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+                const option = new Option(formattedName, category);
+                categorySelect.add(option);
+            });
+            // Trigger initial unit population
+            categorySelect.dispatchEvent(new Event('change'));
+        }
+
+        function setupEventListeners() {
+            const categorySelect = document.getElementById('category-select');
+            const fromUnitSelect = document.getElementById('from-unit');
+            const toUnitSelect = document.getElementById('to-unit');
+            const inputField = document.getElementById('input-value');
+
+            // Category change listener (updates units)
+            categorySelect.addEventListener('change', () => {
+                const selectedCategory = categorySelect.value;
+                populateUnits(selectedCategory, fromUnitSelect);
+                populateUnits(selectedCategory, toUnitSelect);
+                performConversion();
+            });
+
+            // Input/Unit change listeners (real-time conversion)
+            [inputField, fromUnitSelect, toUnitSelect].forEach(element => {
+                element.addEventListener('input', performConversion);
+                element.addEventListener('change', performConversion);
+            });
+
+            // Initial population
+            populateCategories();
+        }
+
+        // --- 5. UTILITY FUNCTIONS ---
+        function swapUnits() {
+            const fromUnit = document.getElementById('from-unit');
+            const toUnit = document.getElementById('to-unit');
+            
+            const tempValue = fromUnit.value;
+            fromUnit.value = toUnit.value;
+            toUnit.value = tempValue;
+            
+            performConversion();
+        }
+
+        function downloadHistory() {
+            // Using a custom modal/message box instead of alert()
+            const showMessage = (message) => {
+                const existingModal = document.getElementById('message-modal');
+                if (existingModal) existingModal.remove();
+
+                const modalHtml = `
+                    <div id="message-modal" class="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
+                        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full">
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Notification</h3>
+                            <p class="text-sm text-gray-700 mb-6">${message}</p>
+                            <button onclick="document.getElementById('message-modal').remove()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition duration-150">Close</button>
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+            };
+
+
+            if (conversionHistory.length === 0) {
+                showMessage("No conversions have been performed yet to download."); 
+                return;
+            }
+
+            const header = ["Timestamp", "Category", "Input Value", "From Unit", "To Unit", "Result"];
+            const csvRows = [
+                header.join(','),
+                ...conversionHistory.map(row => 
+                    // Sanitize values for CSV by surrounding them with quotes if they contain commas
+                    [row.timestamp, row.category, row.input, row.fromUnit, row.toUnit, row.result].map(item => `"${item}"`).join(',')
+                )
+            ];
+            
+            const csvString = csvRows.join('\n');
+            const blob = new Blob([csvString], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'unit_conversion_history.csv');
+            a.click();
+            
+            // Clean up
+            URL.revokeObjectURL(url);
+            showMessage("Conversion history successfully downloaded!");
+        }
+
+        function changeLanguage() {
+            const lang = document.getElementById('language-select').value;
+            const t = TRANSLATIONS[lang];
+            
+            // 1. Set text direction (for Urdu)
+            document.body.dir = t.direction;
+
+            // 2. Update main text content (labels)
+            for (const id in t) {
+                if (id !== 'direction') {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.textContent = t[id];
+                    }
+                }
+            }
+            
+            // 3. Update table header text
+            const thMap = {
+                en: { 'Category': 'Category', 'Primary Conversion Types': 'Primary Conversion Types', 'Relevance & Notes': 'Relevance & Notes' },
+                ur: { 'Category': 'قسم', 'Primary Conversion Types': 'بنیادی تبادلوں کی اقسام', 'Relevance & Notes': 'مطابقت اور نوٹس' },
+                ru: { 'Category': 'Категория', 'Primary Conversion Types': 'Основные Типы Конвертации', 'Relevance & Notes': 'Актуальность и Примечания' }
+            };
+
+            document.querySelectorAll('.min-w-full thead th').forEach(th => {
+                // We use the original English text in a class or data attribute for reliable lookup, 
+                // but since we don't have that, we rely on the clean text content from the EN map.
+                const originalText = th.textContent.trim();
+                let foundKey = Object.keys(thMap.en).find(key => originalText.includes(key));
+                
+                if (foundKey) {
+                    th.textContent = thMap[lang][foundKey];
+                }
+            });
+
+            // 4. Update table row content
+            const tableBody = document.querySelector('.min-w-full tbody');
+            const rows = tableBody.querySelectorAll('tr');
+            const content = TRANSLATIONS.tableContent[lang];
+
+            if (content && content.length === rows.length) {
+                rows.forEach((row, rowIndex) => {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length >= 3) {
+                        // Cell 0: Category Name (in <strong> tag)
+                        cells[0].querySelector('strong').textContent = content[rowIndex][0];
+                        // Cell 1: Primary Types (plain text)
+                        cells[1].textContent = content[rowIndex][1];
+                        // Cell 2: Relevance & Notes (using innerHTML to preserve <strong> tags)
+                        cells[2].innerHTML = content[rowIndex][2]; 
+                    }
+                });
+            }
+        }
+
+        // --- 6. INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setupEventListeners();
+            // Set initial language (English)
+            changeLanguage();
+            // Perform initial conversion (1.0 m to 1.0 m)
+            performConversion();
+        });
+    </script>
+</body>
+</html>
