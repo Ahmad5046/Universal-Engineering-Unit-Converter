@@ -137,7 +137,7 @@
                         </tr>
                         <tr>
                             <td class="px-6 py-4 whitespace-nowrap"><strong class="table-cat-name">Temperature</strong></td>
-                            <td class="px-6 py-4 table-desc-primary">Measures of heat and cold.</td>
+                            <td class="px-6 py-4 whitespace-nowrap table-desc-primary">Measures of heat and cold.</td>
                             <td class="px-6 py-4 table-desc-notes">Non-linear conversions between <strong>Kelvin</strong>, <strong>Celsius</strong>, and <strong>Fahrenheit</strong>.</td>
                         </tr>
                     </tbody>
@@ -196,13 +196,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Conversion History Download -->
-            <div class="mt-8 flex justify-center">
-                <button onclick="downloadHistory()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-150" id="btn-download-history">
-                    Download Conversion History (CSV)
-                </button>
-            </div>
         </section>
 
         <!-- AD SLOT 3: BOTTOM BANNER -->
@@ -221,8 +214,8 @@
         </div>
     </footer>
 
-    <!-- JavaScript: Unit Data, Conversion Logic, and History/Language -->
-    <script>
+    <!-- JavaScript: Unit Data, Conversion Logic, and Language -->
+    <script type="module">
         // --- 1. UNIT DEFINITIONS AND CONVERSION FACTORS ---
         // Factors are defined relative to the 'base' unit (factor = 1).
         const UNITS = {
@@ -235,7 +228,7 @@
                     millimeter: { name: 'Millimeter', symbol: 'mm', factor: 0.001 },
                     foot: { name: 'Foot', symbol: 'ft', factor: 0.3048 },
                     inch: { name: 'Inch', symbol: 'in', factor: 0.0254 },
-                    sooter: { name: 'Sooter (1/8 inch)', symbol: 'soot', factor: 0.003175 }, // 0.125 in * 0.0254 m/in
+                    sooter: { name: 'Sooter (1/8 inch)', symbol: 'soot', factor: 0.003175 }, 
                     mile: { name: 'Mile', symbol: 'mi', factor: 1609.34 },
                     yard: { name: 'Yard', symbol: 'yd', factor: 0.9144 },
                     nautical_mile: { name: 'Nautical Mile', symbol: 'nm', factor: 1853 },
@@ -247,22 +240,22 @@
                 base: 'sq_meter',
                 units: {
                     sq_meter: { name: 'Square Meter', symbol: 'm²', factor: 1 },
-                    sq_ft: { name: 'Square Foot', symbol: 'ft²', factor: 0.0929 }, // Based on 0.0929 m²
+                    sq_ft: { name: 'Square Foot', symbol: 'ft²', factor: 0.0929 }, 
                     sq_cm: { name: 'Square Centimeter', symbol: 'cm²', factor: 0.0001 },
                     sq_inch: { name: 'Square Inch', symbol: 'in²', factor: 0.00064516 },
                     sq_yard: { name: 'Square Yard', symbol: 'yd²', factor: 0.8361 },
-                    sq_mile: { name: 'Square Mile', symbol: 'mi²', factor: 2589988.11 }, // 2.59 km² * 10^6 m²/km²
+                    sq_mile: { name: 'Square Mile', symbol: 'mi²', factor: 2589988.11 }, 
                     sq_km: { name: 'Square Kilometer', symbol: 'km²', factor: 1000000 },
                     acre: { name: 'Acre', symbol: 'ac', factor: 4046.9 },
                     hectare: { name: 'Hectare', symbol: 'ha', factor: 10000 },
-                    kanal: { name: 'Kanal', symbol: 'kanal', factor: 505.857 }, // 8 kanal per acre / 8 = 505.857
+                    kanal: { name: 'Kanal', symbol: 'kanal', factor: 505.857 },
                 }
             },
             volume: {
                 base: 'cubic_meter',
                 units: {
                     cubic_meter: { name: 'Cubic Meter (cum)', symbol: 'm³', factor: 1 },
-                    cu_ft: { name: 'Cubic Foot (cft)', symbol: 'ft³', factor: 0.0283 }, // Based on 0.0283 m³
+                    cu_ft: { name: 'Cubic Foot (cft)', symbol: 'ft³', factor: 0.0283 }, 
                     cu_yd: { name: 'Cubic Yard', symbol: 'yd³', factor: 0.7646 },
                     cu_inch: { name: 'Cubic Inch', symbol: 'in³', factor: 0.00001639 },
                     us_gal: { name: 'US Gallon', symbol: 'US gal', factor: 0.003785 },
@@ -288,8 +281,8 @@
                 base: 'kg_per_m3', // Kilograms per Cubic Meter
                 units: {
                     kg_per_m3: { name: 'kg/m³', symbol: 'kg/m³', factor: 1 },
-                    kN_per_m3: { name: 'kN/m³', symbol: 'kN/m³', factor: 101.9716 }, // 1000 / 9.807 = 101.9716 approx
-                    lb_per_ft3: { name: 'lb/ft³', symbol: 'lb/ft³', factor: 16.0185 }, // 1 lb/ft³ in kg/m³
+                    kN_per_m3: { name: 'kN/m³', symbol: 'kN/m³', factor: 101.9716 }, 
+                    lb_per_ft3: { name: 'lb/ft³', symbol: 'lb/ft³', factor: 16.0185 }, 
                     m_ton_per_m3: { name: 'M Ton/m³', symbol: 'M Ton/m³', factor: 1000 },
                 }
             },
@@ -299,7 +292,7 @@
                     newton: { name: 'Newton', symbol: 'N', factor: 1 },
                     kilonewton: { name: 'KiloNewton', symbol: 'kN', factor: 1000 },
                     pound_force: { name: 'Pound Force (lbf)', symbol: 'lbf', factor: 4.448 },
-                    kilopound: { name: 'Kilopound (kip)', symbol: 'kip', factor: 4448 }, // 1 kip = 1000 lbf
+                    kilopound: { name: 'Kilopound (kip)', symbol: 'kip', factor: 4448 }, 
                     kilogram_force: { name: 'Kilogram Force (kgf)', symbol: 'kgf', factor: 9.807 },
                 }
             },
@@ -309,8 +302,8 @@
                     pascal: { name: 'Pascal', symbol: 'Pa', factor: 1 },
                     kpa: { name: 'KiloPascal (K Pa)', symbol: 'K Pa', factor: 1000 },
                     mpa: { name: 'MegaPascal', symbol: 'MPa', factor: 1000000 },
-                    psi: { name: 'Pound per Sq Inch (psi)', symbol: 'psi', factor: 6894.76 }, // Based on 6894.76 Pa
-                    psf: { name: 'Pound per Sq Foot (psf)', symbol: 'psf', factor: 47.88026 }, // 1 psf = 1/144 psi in Pa. 144 psi = 1 MPa (approx 145 psi)
+                    psi: { name: 'Pound per Sq Inch (psi)', symbol: 'psi', factor: 6894.76 }, 
+                    psf: { name: 'Pound per Sq Foot (psf)', symbol: 'psf', factor: 47.88026 }, 
                     atmosphere: { name: 'Standard Atmosphere', symbol: 'atm', factor: 101325 },
                     bar: { name: 'Bar', symbol: 'bar', factor: 100000 },
                     kg_per_cm2: { name: 'kg/cm²', symbol: 'kg/cm²', factor: 98066.5 },
@@ -322,7 +315,7 @@
                     joule: { name: 'Joule', symbol: 'J', factor: 1 },
                     kwh: { name: 'Kilowatt-hour', symbol: 'kWh', factor: 3600000 },
                     watt_hr: { name: 'Watt-hour', symbol: 'Wh', factor: 3600 },
-                    ft_lb: { name: 'Foot-Pound', symbol: 'ft lb', factor: 1.35582 }, // 1 J = 0.7373 ft lb, so 1 ft lb = 1/0.7373 J
+                    ft_lb: { name: 'Foot-Pound', symbol: 'ft lb', factor: 1.35582 }, 
                     btu: { name: 'British Thermal Unit', symbol: 'BTU', factor: 1055.06 },
                     ton_tnt: { name: 'Ton TNT', symbol: 'Ton TNT', factor: 4.184e9 },
                 }
@@ -333,8 +326,8 @@
                     watt: { name: 'Watt', symbol: 'W', factor: 1 },
                     kilowatt: { name: 'Kilowatt', symbol: 'kW', factor: 1000 },
                     metric_hp: { name: 'Metric Horsepower (hp)', symbol: 'hp (m)', factor: 735.499 },
-                    electric_hp: { name: 'Electric Horsepower', symbol: 'hp (e)', factor: 746 }, // Rounded from 745.7
-                    ft_lb_per_min: { name: 'ft lb/min', symbol: 'ft lb/min', factor: 0.02259697 }, // 1W = 44.25 ft lb/min
+                    electric_hp: { name: 'Electric Horsepower', symbol: 'hp (e)', factor: 746 }, 
+                    ft_lb_per_min: { name: 'ft lb/min', symbol: 'ft lb/min', factor: 0.02259697 }, 
                 }
             },
             flow_rate: {
@@ -389,7 +382,6 @@
                 'label-input-value': 'Input Value (From):',
                 'label-to-unit': 'Target Unit:',
                 'label-converted-value': 'Converted Value (To):',
-                'btn-download-history': 'Download Conversion History (CSV)',
             },
             ur: {
                 direction: 'rtl',
@@ -402,7 +394,6 @@
                 'label-input-value': 'ابتدائی قدر (From):',
                 'label-to-unit': 'منزل کا یونٹ:',
                 'label-converted-value': 'تبدیل شدہ قدر (To):',
-                'btn-download-history': 'تبادلہ ہسٹری ڈاؤن لوڈ کریں (CSV)',
             },
             ru: {
                 direction: 'ltr',
@@ -415,7 +406,6 @@
                 'label-input-value': 'Входное Значение (Из):',
                 'label-to-unit': 'Целевая Единица:',
                 'label-converted-value': 'Конвертированное Значение (В):',
-                'btn-download-history': 'Скачать Историю Конвертации (CSV)',
             },
 
             // Translations for the static content in the explanation table (using innerHTML for <strong> tags)
@@ -453,13 +443,11 @@
                     ["Сила / Вес", "Приложенные нагрузки и гравитационная сила.", "Конвертирует единицы силы (<strong>Newton</strong>, <strong>KiloNewton</strong>) и большие нагрузки (<strong>Kip</strong>, <strong>kgf</strong>)."],
                     ["Давление", "Сила, оказываемая на единицу площади.", "Охватывает такие единицы, как <strong>MPa</strong>, <strong>psi</strong>, <strong>kPa</strong> и <strong>atm</strong> для гидромеханики и структурных нагрузок."],
                     ["Энергия и Мощность", "Работа и скорость передачи энергии.", "Включает стандартные физические единицы (`Joule`, `Watt`) и тепловые единицы (<strong>BTU</strong>, <strong>Horsepower</strong>)."],
-                    ["Расход и Крутящий Момент", "Специализированные инженерные единицы.", "Включает показатели расхода (<strong>cusec</strong>, <strong>gpm</strong>) и измерения вращательной силы."],
+                    ["Flow Rate & Torque", "Специализированные инженерные единицы.", "Включает показатели расхода (<strong>cusec</strong>, <strong>gpm</strong>) и измерения вращательной силы."],
                     ["Температура", "Меры тепла и холода.", "Нелинейные преобразования между <strong>Kelvin</strong>, <strong>Celsius</strong> и <strong>Fahrenheit</strong>."],
                 ],
             }
         };
-
-        let conversionHistory = [];
 
         // --- 3. CORE CONVERSION LOGIC ---
         function convertStandard(value, category, fromUnit, toUnit) {
@@ -471,7 +459,7 @@
 
             if (!fromFactor || !toFactor) return NaN;
 
-            // FIX: Corrected the division from 'toUnit' (string) to 'toFactor' (number)
+            // Correct calculation: Value * (From_Factor / To_Factor)
             return value * (fromFactor / toFactor);
         }
 
@@ -505,19 +493,9 @@
             // 3. Display Result
             if (!isNaN(convertedValue)) {
                 const targetUnitSymbol = UNITS[category].units[toUnit].symbol;
-                // Use toLocaleString for better formatting, with max 6 decimal places for precision
+                // Format the result to a maximum of 6 decimal places, using toLocaleString for grouping thousands
                 resultField.textContent = convertedValue.toFixed(6).toLocaleString('en-US', {maximumFractionDigits: 6}); 
                 resultUnitSpan.textContent = targetUnitSymbol;
-
-                // 4. Log History
-                conversionHistory.push({
-                    timestamp: new Date().toISOString(),
-                    category: category,
-                    input: inputValue,
-                    fromUnit: UNITS[category].units[fromUnit].symbol,
-                    toUnit: targetUnitSymbol,
-                    result: convertedValue.toFixed(6)
-                });
             } else {
                 resultField.textContent = 'Error';
                 resultUnitSpan.textContent = '';
@@ -574,9 +552,10 @@
 
             // Initial population
             populateCategories();
+            performConversion();
         }
 
-        // --- 5. UTILITY FUNCTIONS ---
+        // --- 5. UTILITY FUNCTIONS (SWAP) ---
         function swapUnits() {
             const fromUnit = document.getElementById('from-unit');
             const toUnit = document.getElementById('to-unit');
@@ -588,53 +567,7 @@
             performConversion();
         }
 
-        function downloadHistory() {
-            // Using a custom modal/message box instead of alert()
-            const showMessage = (message) => {
-                const existingModal = document.getElementById('message-modal');
-                if (existingModal) existingModal.remove();
-
-                const modalHtml = `
-                    <div id="message-modal" class="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
-                        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full">
-                            <h3 class="text-lg font-bold text-gray-900 mb-4">Notification</h3>
-                            <p class="text-sm text-gray-700 mb-6">${message}</p>
-                            <button onclick="document.getElementById('message-modal').remove()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition duration-150">Close</button>
-                        </div>
-                    </div>
-                `;
-                document.body.insertAdjacentHTML('beforeend', modalHtml);
-            };
-
-
-            if (conversionHistory.length === 0) {
-                showMessage("No conversions have been performed yet to download."); 
-                return;
-            }
-
-            const header = ["Timestamp", "Category", "Input Value", "From Unit", "To Unit", "Result"];
-            const csvRows = [
-                header.join(','),
-                ...conversionHistory.map(row => 
-                    // Sanitize values for CSV by surrounding them with quotes if they contain commas
-                    [row.timestamp, row.category, row.input, row.fromUnit, row.toUnit, row.result].map(item => `"${item}"`).join(',')
-                )
-            ];
-            
-            const csvString = csvRows.join('\n');
-            const blob = new Blob([csvString], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.setAttribute('href', url);
-            a.setAttribute('download', 'unit_conversion_history.csv');
-            a.click();
-            
-            // Clean up
-            URL.revokeObjectURL(url);
-            showMessage("Conversion history successfully downloaded!");
-        }
-
+        // --- 6. LANGUAGE AND TRANSLATION ---
         function changeLanguage() {
             const lang = document.getElementById('language-select').value;
             const t = TRANSLATIONS[lang];
@@ -644,7 +577,7 @@
 
             // 2. Update main text content (labels)
             for (const id in t) {
-                if (id !== 'direction') {
+                if (id !== 'direction' && t.hasOwnProperty(id)) {
                     const element = document.getElementById(id);
                     if (element) {
                         element.textContent = t[id];
@@ -660,8 +593,6 @@
             };
 
             document.querySelectorAll('.min-w-full thead th').forEach(th => {
-                // We use the original English text in a class or data attribute for reliable lookup, 
-                // but since we don't have that, we rely on the clean text content from the EN map.
                 const originalText = th.textContent.trim();
                 let foundKey = Object.keys(thMap.en).find(key => originalText.includes(key));
                 
@@ -679,24 +610,20 @@
                 rows.forEach((row, rowIndex) => {
                     const cells = row.querySelectorAll('td');
                     if (cells.length >= 3) {
-                        // Cell 0: Category Name (in <strong> tag)
                         cells[0].querySelector('strong').textContent = content[rowIndex][0];
-                        // Cell 1: Primary Types (plain text)
                         cells[1].textContent = content[rowIndex][1];
-                        // Cell 2: Relevance & Notes (using innerHTML to preserve <strong> tags)
                         cells[2].innerHTML = content[rowIndex][2]; 
                     }
                 });
             }
+            
         }
 
-        // --- 6. INITIALIZATION ---
+        // --- 7. INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             setupEventListeners();
             // Set initial language (English)
             changeLanguage();
-            // Perform initial conversion (1.0 m to 1.0 m)
-            performConversion();
         });
     </script>
 </body>
